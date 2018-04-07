@@ -5,6 +5,7 @@ import ResponsiveMixin from 'lights-out/mixins/responsive';
 
 // D3-related packages
 import { scaleLinear } from 'd3-scale';
+import { select } from 'd3-selection';
 
 export default Component.extend(ResponsiveMixin, {
     /*************************************************************************************
@@ -62,6 +63,12 @@ export default Component.extend(ResponsiveMixin, {
         this.set('buttons', buttons);
     },
 
+    didInsertElement() {
+        this.drawGame();
+
+        this._super(...arguments);
+    },
+
     // Place points from left to right in the physical space
     scaleX: computed('numButtons.x', 'width', function() {
         return scaleLinear()
@@ -75,4 +82,43 @@ export default Component.extend(ResponsiveMixin, {
             .domain([0, this.get('numButtons.y')])
             .range([0, this.get('height')]);
     }),
+
+
+    /*************************************************************************************
+
+        Draw the game
+
+    *************************************************************************************/
+    drawGame() {
+        this.createContainer();
+    },
+
+    createContainer() {
+        // Clear the DOM
+        this.$(this.get('elementIdentifier'))[0].innerHTML = '';
+
+        // Get visual properties
+        const containerWidth  = this.get('containerWidth');
+        const containerHeight = this.get('containerHeight');
+        const margin          = this.get('margin');
+
+        // Create an SVG container
+        let lightsOutContainer = select(this.get('elementIdentifier'))
+            .append('svg')
+            .attr('class', 'container')
+            .attr('width', containerWidth)
+            .attr('height', containerHeight)
+            .attr('viewBox', `0 0 ${containerWidth} ${containerHeight}`)
+            .attr('preserveAspectRatio', 'xMidYMin');
+
+        this.set('lightsOutContainer', lightsOutContainer);
+
+        // Create a board inside the container
+        let lightsOutBoard = lightsOutContainer
+            .append('g')
+            .attr('class', 'board')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+        this.set('lightsOutBoard', lightsOutBoard);
+    },
 });
