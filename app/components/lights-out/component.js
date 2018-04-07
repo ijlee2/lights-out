@@ -1,5 +1,10 @@
+// Ember-related packages
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import ResponsiveMixin from 'lights-out/mixins/responsive';
+
+// D3-related packages
+import { scaleLinear } from 'd3-scale';
 
 export default Component.extend(ResponsiveMixin, {
     /*************************************************************************************
@@ -56,4 +61,18 @@ export default Component.extend(ResponsiveMixin, {
 
         this.set('buttons', buttons);
     },
+
+    // Place points from left to right in the physical space
+    scaleX: computed('numButtons.x', 'width', function() {
+        return scaleLinear()
+            .domain([0, this.get('numButtons.x')])
+            .range([0, this.get('width')]);
+    }),
+
+    // Place points from top to bottom in the physical space
+    scaleY: computed('numButtons.y', 'height', function() {
+        return scaleLinear()
+            .domain([0, this.get('numButtons.y')])
+            .range([0, this.get('height')]);
+    }),
 });
