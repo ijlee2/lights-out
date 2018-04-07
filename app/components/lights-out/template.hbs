@@ -1,3 +1,9 @@
-<div id='message'></div>
+<div id='message'>
+    {{#if areLightsOut}}
+        Congratulations!
+    {{else}}
+        Number of Moves: {{numMoves}}
+    {{/if}}
+</div>
 
 <div id='game'></div>
