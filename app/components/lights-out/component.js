@@ -91,6 +91,8 @@ export default Component.extend(ResponsiveMixin, {
     *************************************************************************************/
     drawGame() {
         this.createContainer();
+        this.createGradients();
+        this.createButtons();
     },
 
     createContainer() {
@@ -120,5 +122,72 @@ export default Component.extend(ResponsiveMixin, {
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
         this.set('lightsOutBoard', lightsOutBoard);
+    },
+
+    createGradients() {
+        // Create light-off effect
+        let linearGradient = this.get('lightsOutBoard')
+            .append('defs')
+            .append('linearGradient')
+            .attr('id', 'linear-gradient')
+            .attr('x1', '0%')
+            .attr('y1', '0%')
+            .attr('x2', '0%')
+            .attr('y2', '100%');
+
+        linearGradient.append('stop')
+            .attr('offset', '5%')
+            .attr('stop-color', '#9688cc');
+
+        linearGradient.append('stop')
+            .attr('offset', '90%')
+            .attr('stop-color', '#806fbc');
+
+        // Create light-on effect
+        let radialGradient = this.get('lightsOutBoard')
+            .append('defs')
+            .append('radialGradient')
+            .attr('id', 'radial-gradient');
+
+        radialGradient.append('stop')
+            .attr('offset', '5%')
+            .attr('stop-color', '#eb71dc');
+
+        radialGradient.append('stop')
+            .attr('offset', '90%')
+            .attr('stop-color', '#e64182');
+    },
+
+    createButtons() {
+        // Get visual properties
+        const buttonSize = this.get('buttonSize');
+        const scaleX     = this.get('scaleX');
+        const scaleY     = this.get('scaleY');
+
+        // Add a buttons group inside the board
+        this.get('lightsOutBoard')
+            .append('g')
+            .attr('class', 'buttons');
+
+        // It's easier to work with 1D data in D3. Convert the 2D array to an 1D array.
+        const buttons = this.get('buttons').reduce((accumulator, rowsOfButtons) => accumulator.concat(rowsOfButtons), []);
+
+        // Create buttons inside the buttons group
+        let buttonGroup = select('.buttons')
+            .selectAll('rect')
+            .data(buttons);
+
+        // Draw buttons
+        buttonGroup
+            .enter()
+            .append('rect')
+            .attr('class', button => `button-id_${button.coordinates.x}_${button.coordinates.y}`)
+            .attr('x', button => scaleX(button.coordinates.x))
+            .attr('y', button => scaleY(button.coordinates.y))
+            .attr('width', buttonSize)
+            .attr('height', buttonSize)
+            .attr('fill', button => button.isLightOn ? 'url(#radial-gradient)' : 'url(#linear-gradient)')
+            .attr('stroke', '#cbd0d3')
+            .attr('stroke-width', 0.075 * buttonSize);
     },
 });
