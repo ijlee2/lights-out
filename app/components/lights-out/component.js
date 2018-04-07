@@ -1,6 +1,7 @@
 // Ember-related packages
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { copy } from '@ember/object/internals';
 import ResponsiveMixin from 'lights-out/mixins/responsive';
 
 // D3-related packages
@@ -64,6 +65,7 @@ export default Component.extend(ResponsiveMixin, {
     },
 
     didInsertElement() {
+        this.createPuzzle();
         this.drawGame();
 
         this._super(...arguments);
@@ -81,6 +83,58 @@ export default Component.extend(ResponsiveMixin, {
         return scaleLinear()
             .domain([0, this.get('numButtons.y')])
             .range([0, this.get('height')]);
+    }),
+
+
+    /*************************************************************************************
+
+        Define the game logic
+
+    *************************************************************************************/
+    createPuzzle() {
+        // Create a solvable puzzle by "walking backwards"
+        for (let index = 0; index < 5; index++) {
+            const i = Math.floor(this.get('numButtons.y') * Math.random());
+            const j = Math.floor(this.get('numButtons.x') * Math.random());
+
+            this.toggleLights(i, j);
+        }
+    },
+
+    toggleLights(i, j) {
+        // Make a copy so that Ember knows if there has been a change
+        let buttons = copy(this.get('buttons'), true).toArray();
+
+        // Center
+        buttons[i][j].isLightOn = !buttons[i][j].isLightOn;
+
+        // Top
+        if (i > 0) {
+            buttons[i - 1][j].isLightOn = !buttons[i - 1][j].isLightOn;
+        }
+
+        // Bottom
+        if (i < this.get('numButtons.y') - 1) {
+            buttons[i + 1][j].isLightOn = !buttons[i + 1][j].isLightOn;
+        }
+
+        // Left
+        if (j > 0) {
+            buttons[i][j - 1].isLightOn = !buttons[i][j - 1].isLightOn;
+        }
+
+        // Right
+        if (j < this.get('numButtons.x') - 1) {
+            buttons[i][j + 1].isLightOn = !buttons[i][j + 1].isLightOn;
+        }
+
+        // Save the new state
+        this.set('buttons', buttons);
+    },
+
+    areLightsOut: computed('buttons', function() {
+        // If any of the lights are still on, the game continues
+        return !this.get('buttons').any(rowsOfButtons => rowsOfButtons.any(button => button.isLightOn));
     }),
 
 
@@ -188,6 +242,27 @@ export default Component.extend(ResponsiveMixin, {
             .attr('height', buttonSize)
             .attr('fill', button => button.isLightOn ? 'url(#radial-gradient)' : 'url(#linear-gradient)')
             .attr('stroke', '#cbd0d3')
-            .attr('stroke-width', 0.075 * buttonSize);
+            .attr('stroke-width', 0.075 * buttonSize)
+            .on('click', button => this.send('buttonOnClick', button));
     },
+
+
+    /*************************************************************************************
+
+        Set the component's actions
+
+    *************************************************************************************/
+    actions: {
+        buttonOnClick(thisButton) {
+            if (this.get('areLightsOut')) return;
+
+            // Toggle lights
+            const { x, y } = thisButton.coordinates;
+            this.toggleLights(y, x);
+
+            // Update the game
+            this.incrementProperty('numMoves');
+            this.drawGame();
+        }
+    }
 });
