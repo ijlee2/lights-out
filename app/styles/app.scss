@@ -1,0 +1,32 @@
+body {
+    background-color: #322b33;
+    font-family: 'Patrick Hand SC', cursive;
+    font-size: 5vw;
+    letter-spacing: 0.025vw;
+
+    #message {
+        padding: 0.05vw 0;
+        color: #e8e5ce;
+        text-align: center;
+    }
+
+    #game {
+        .buttons {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+@media (max-width: 840px) {
+    #message {
+        font-size: 7.5vw;
+    }
+}
+
+@media (max-width: 600px) {
+    #message {
+        font-size: 10vw;
+    }
+}

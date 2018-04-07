@@ -1,51 +1,17 @@
-# lights-out
+# Lights Out
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This is the code companion to my [Ember-D3 tutorial](https://crunchingnumbers.live/2018/04/07/lights-out/), presented at the Ember ATX Meetup on 4/26/2018.
 
-## Prerequisites
+You can check how the project should look after each step, by running `git checkout` and specifying the branch name:
 
-You will need the following things properly installed on your computer.
 
-* [Git](https://git-scm.com/)
-* [Node.js](https://nodejs.org/) (with npm)
-* [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
-
-## Installation
-
-* `git clone <repository-url>` this repository
-* `cd lights-out`
-* `npm install`
-
-## Running / Development
-
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
-
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
-### Running Tests
-
-* `ember test`
-* `ember test --server`
-
-### Building
-
-* `ember build` (development)
-* `ember build --environment production` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+| Branch name | Added features                  |
+| ----------- | ------------------------------- |
+| step-1      | Setup                           |
+| step-2a     | init                            |
+| step-2b     | responsive                      |
+| step-2c     | scale                           |
+| step-2d     | container                       |
+| step-2e     | buttons                         |
+| step-2f     | action                          |
+| master      | restart game, difficulty levels |

@@ -2,14 +2,14 @@
   "name": "lights-out",
   "version": "0.0.0",
   "private": true,
-  "description": "Small description for lights-out goes here",
+  "description": "Ember-D3 tutorial for Ember ATX Meetup",
   "license": "MIT",
-  "author": "",
+  "author": "Isaac J. Lee",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": "https://github.com/ijlee2/lights-out",
   "scripts": {
     "build": "ember build",
     "lint:js": "eslint ./*.js app config lib server tests",
@@ -28,9 +28,11 @@
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-cli-inject-live-reload": "^1.4.1",
     "ember-cli-qunit": "^4.1.1",
+    "ember-cli-sass": "^7.1.7",
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^2.0.0",
+    "ember-d3": "^0.4.4",
     "ember-data": "~2.18.0",
     "ember-export-application-global": "^2.0.0",
     "ember-load-initializers": "^1.0.0",
@@ -42,5 +44,8 @@
   },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
+  },
+  "dependencies": {
+    "d3": "^5.0.0"
   }
 }
