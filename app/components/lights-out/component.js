@@ -1,7 +1,8 @@
 // Ember-related packages
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { copy } from '@ember/object/internals';
+import { later } from '@ember/runloop';
 import ResponsiveMixin from 'lights-out/mixins/responsive';
 
 // D3-related packages
@@ -20,6 +21,7 @@ export default Component.extend(ResponsiveMixin, {
         // Set game properties
         this.set('numButtons', {x: 5, y: 5});
         this.set('numMoves', 0);
+        this.set('numGamesWon', 0);
 
         // Create an array of buttons
         //
@@ -65,8 +67,7 @@ export default Component.extend(ResponsiveMixin, {
     },
 
     didInsertElement() {
-        this.createPuzzle();
-        this.drawGame();
+        this.startGame();
 
         this._super(...arguments);
     },
@@ -91,9 +92,21 @@ export default Component.extend(ResponsiveMixin, {
         Define the game logic
 
     *************************************************************************************/
+    startGame() {
+        // Reset game properties
+        this.set('numMoves', 0);
+        this.get('buttons').forEach(rowsOfButtons => rowsOfButtons.setEach('isLightOn', false));
+
+        this.createPuzzle();
+        this.drawGame();
+    },
+
     createPuzzle() {
+        // Make the game harder with each win
+        const maxNumMovesNeeded = 5 + this.get('numGamesWon');
+
         // Create a solvable puzzle by "walking backwards"
-        for (let index = 0; index < 5; index++) {
+        for (let index = 0; index < maxNumMovesNeeded; index++) {
             const i = Math.floor(this.get('numButtons.y') * Math.random());
             const j = Math.floor(this.get('numButtons.x') * Math.random());
 
@@ -135,6 +148,14 @@ export default Component.extend(ResponsiveMixin, {
     areLightsOut: computed('buttons', function() {
         // If any of the lights are still on, the game continues
         return !this.get('buttons').any(rowsOfButtons => rowsOfButtons.any(button => button.isLightOn));
+    }),
+
+    restartGame: observer('areLightsOut', function() {
+        if (this.get('areLightsOut')) {
+            this.incrementProperty('numGamesWon');
+
+            later(() => this.startGame(), 1500);
+        }
     }),
 
 
