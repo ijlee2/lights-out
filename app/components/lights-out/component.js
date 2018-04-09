@@ -47,16 +47,16 @@ export default Component.extend(ResponsiveMixin, {
         let buttons = [];
 
         for (let i = 0; i < this.get('numButtons.y'); i++) {
-            let rowsOfButtons = [];
+            let rowOfButtons = [];
 
             for (let j = 0; j < this.get('numButtons.x'); j++) {
-                rowsOfButtons.push({
+                rowOfButtons.push({
                     coordinates: {x: j, y: i},
                     isLightOn: false
                 });
             }
 
-            buttons.push(rowsOfButtons);
+            buttons.push(rowOfButtons);
         }
 
         this.set('buttons', buttons);
