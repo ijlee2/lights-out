@@ -51,16 +51,16 @@ export default Component.extend(ResponsiveMixin, {
         let buttons = [];
 
         for (let i = 0; i < this.get('numButtons.y'); i++) {
-            let rowsOfButtons = [];
+            let rowOfButtons = [];
 
             for (let j = 0; j < this.get('numButtons.x'); j++) {
-                rowsOfButtons.push({
+                rowOfButtons.push({
                     coordinates: {x: j, y: i},
                     isLightOn: false
                 });
             }
 
-            buttons.push(rowsOfButtons);
+            buttons.push(rowOfButtons);
         }
 
         this.set('buttons', buttons);
@@ -95,7 +95,7 @@ export default Component.extend(ResponsiveMixin, {
     startGame() {
         // Reset game properties
         this.set('numMoves', 0);
-        this.get('buttons').forEach(rowsOfButtons => rowsOfButtons.setEach('isLightOn', false));
+        this.get('buttons').forEach(rowOfButtons => rowOfButtons.setEach('isLightOn', false));
 
         this.createPuzzle();
         this.drawGame();
@@ -147,7 +147,7 @@ export default Component.extend(ResponsiveMixin, {
 
     areLightsOut: computed('buttons', function() {
         // If any of the lights are still on, the game continues
-        return !this.get('buttons').any(rowsOfButtons => rowsOfButtons.any(button => button.isLightOn));
+        return !this.get('buttons').any(rowOfButtons => rowOfButtons.any(button => button.isLightOn));
     }),
 
     restartGame: observer('areLightsOut', function() {
@@ -245,7 +245,7 @@ export default Component.extend(ResponsiveMixin, {
             .attr('class', 'buttons');
 
         // It's easier to work with 1D data in D3. Convert the 2D array to an 1D array.
-        const buttons = this.get('buttons').reduce((accumulator, rowsOfButtons) => accumulator.concat(rowsOfButtons), []);
+        const buttons = this.get('buttons').reduce((accumulator, rowOfButtons) => accumulator.concat(rowOfButtons), []);
 
         // Create buttons inside the buttons group
         let buttonGroup = select('.buttons')
